@@ -5,15 +5,27 @@ s32 func_8009AD70()
     return 0xF;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009AD78.s")
+u8 func_8009AD78(PlayerState *self, s32 index)
+{
+    return self->fieldC4[index];
+}
 
 void func_8009AD88(s32 arg0) 
 {
 }
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009AD90.s")
+void func_8009AD90(PlayerState *self)
+{
+    s32 i;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009ADF0.s")
+    for (i = 0; i < 15; i++) {
+        self->fieldC4[i] = 0;
+    }
+}
 
+void func_8009ADF0(PlayerState *self, s32 index, u8 value)
+{
+    self->fieldC4[index] = value;
+}
 s32 func_8009AE00() 
 {
     return 0xC4;
@@ -158,7 +170,19 @@ end:
 
 #pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BB94.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BBB8.s")
+f32 func_8009BBB8(PlayerState *self)
+{
+    f32 current_velocity;
+    f32 target_velocity;
+
+    current_velocity = func_8009BB5C(self);
+    target_velocity = baphysics_get_target_horizontal_velocity(self);
+
+    if (current_velocity < target_velocity)
+        return target_velocity / current_velocity;
+
+    return 1.0f;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BC08.s")
 
