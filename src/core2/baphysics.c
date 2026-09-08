@@ -161,15 +161,76 @@ void func_8009B1FC(PlayerState *self)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B27C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B3B8.s")
+void func_8009B3B8(PlayerState *self)
+{
+    func_800EE7F8(
+        self->baphysics + 0x28,
+        self->baphysics + 0x10
+    );
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B414.s")
+    func_800EF334(
+        self->baphysics + 0x28,
+        func_800D8FF8()
+    );
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B450.s")
+    func_800EF04C(
+        self->baphysics + 0x04,
+        self->baphysics + 0x28
+    );
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B4D0.s")
+void func_8009B414(PlayerState *self)
+{
+    f32 sp_1c[3];
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B4FC.s")
+    func_8009C128(self, sp_1c);
+
+    func_800EFB24(
+        self->baphysics + 0x28,
+        self->baphysics + 0x04,
+        sp_1c
+    );
+}
+
+void func_8009B450(PlayerState *self)
+{
+    self->baphysics->unk4C += func_800D8FF8();
+
+    self->baphysics->unk08 =
+        self->baphysics->unk48 +
+        func_80013970(
+            func_800F0F9C(
+                self->baphysics->unk4C,
+                D_801252A8
+            ) * 30.0f
+        ) * 5.0f;
+}
+
+void func_8009B4D0(PlayerState *self, f32 dst[3])
+{
+    func_800EE7F8(dst, self->baphysics + 0x28);
+}
+
+void func_8009B4FC(PlayerState *self)
+{
+    self->baphysics->type = 0;
+    self->baphysics->unk50 = 1.0f;
+
+    func_800EFA4C(
+        self->baphysics->unk10,
+        0.0f,
+        -1.0f,
+        0.0f
+    );
+
+    func_800EFD24(self->baphysics + 0x1C);
+    func_800EFD24(self->baphysics + 0x28);
+    func_800EFD24(self->baphysics + 0x04);
+
+    self->baphysics->unk44 = 2.0f;
+
+    func_8009BC34(self);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B590.s")
 
@@ -197,21 +258,42 @@ void func_8009B1FC(PlayerState *self)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BAE8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BAF4.s")
+BaPhysicsType func_8009BAF4(PlayerState *self)
+{
+    return self->baphysics->type;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/baphysics_get_target_horizontal_velocity.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BB0C.s")
+f32 func_8009BB0C(PlayerState *self)
+{
+    return self->baphysics->unk20;
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BB18.s")
+f32 func_8009BB18(PlayerState *self)
+{
+    return self->baphysics->unk40;
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BB24.s")
+void func_8009BB24(PlayerState *self, f32 dst[3])
+{
+    func_800EE7F8(dst, self->baphysics + 0x10);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/baphysics_get_vertical_velocity.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BB5C.s")
+f32 func_8009BB5C(PlayerState *self)
+{
+    return sqrtf(
+        self->baphysics->unk18 * self->baphysics->unk18 +
+        self->baphysics->unk10 * self->baphysics->unk10
+    );
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BB94.s")
+f32 func_8009BB94(PlayerState *self)
+{
+    return func_800EEF94(self->baphysics + 0x10);
+}
 
 f32 func_8009BBB8(PlayerState *self)
 {
@@ -227,23 +309,51 @@ f32 func_8009BBB8(PlayerState *self)
     return 1.0f;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BC08.s")
+void func_8009BC08(PlayerState *self, f32 dst[3])
+{
+    func_800EE7F8(dst, self->baphysics + 0x04);
+}
 
 void func_8009BC34(PlayerState* arg0)
 {
     baphysics_reset_gravity(arg0);
     baphysics_reset_terminal_velocity(arg0);
 }
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BC5C.s")
+void func_8009BC5C(PlayerState *self, f32 value)
+{
+    self->baphysics->unk44 = value;
+}
+void baphysics_reset_gravity(PlayerState *self)
+{
+    baphysics_set_gravity(self, D_80117EF0);
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/baphysics_reset_gravity.s")
+void baphysics_reset_terminal_velocity(PlayerState *self)
+{
+    baphysics_set_terminal_velocity(self, D_80117EF4);
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/baphysics_reset_terminal_velocity.s")
+void baphysics_set_gravity(PlayerState *self, f32 gravity)
+{
+    self->baphysics->unk34 = gravity;
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/baphysics_set_gravity.s")
+void baphysics_set_terminal_velocity(PlayerState *self, f32 velocity)
+{
+    self->baphysics->unk38 = velocity;
+}
+s32 func_8009BCD4(PlayerState *self, f32 velocity)
+{
+    if (self->baphysics->unk18 * self->baphysics->unk18 +
+        self->baphysics->unk10 * self->baphysics->unk10 <=
+        velocity * velocity) {
+        return 1;
+    }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/baphysics_set_terminal_velocity.s")
+    return 0;
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BCD4.s")
-
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009BD18.s")
+void func_8009BD18(PlayerState *self, f32 value)
+{
+    self->baphysics->unk50 = value;
+}
