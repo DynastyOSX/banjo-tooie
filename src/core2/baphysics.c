@@ -110,7 +110,32 @@ end:
     func_800F2168(self->baphysics + 0x10, 0.0001f);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B08C.s")
+void func_8009B08C(PlayerState *self)
+{
+    f32 sp_2c[3];
+    f32 dt;
+
+    dt = func_800D8FF8();
+
+    func_800EFB24(
+        sp_2c,
+        self->baphysics + 0x1C,
+        self->baphysics + 0x10
+    );
+
+    func_800EF334(
+        sp_2c,
+        self->baphysics->unk44 * dt
+    );
+
+    if (sp_2c[0] * sp_2c[0] +
+        sp_2c[1] * sp_2c[1] +
+        sp_2c[2] * sp_2c[2] < D_801252A4) {
+        func_800EE7F8(
+            self->baphysics + 0x10,
+            self->baphysics + 0x1C
+        );
+    } else {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B170.s")
 
