@@ -128,7 +128,7 @@ void func_8009B08C(PlayerState *self)
         self->baphysics->unk44 * dt
     );
 
-    if (sp_2c[0] * sp_2c[0] +
+     if (sp_2c[0] * sp_2c[0] +
         sp_2c[1] * sp_2c[1] +
         sp_2c[2] * sp_2c[2] < D_801252A4) {
         func_800EE7F8(
@@ -136,10 +136,28 @@ void func_8009B08C(PlayerState *self)
             self->baphysics + 0x1C
         );
     } else {
+        func_800EF04C(
+            self->baphysics + 0x10,
+            sp_2c
+        );
+    }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B170.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B1FC.s")
+void func_8009B1FC(PlayerState *self)
+{
+    f32 delta_time;
+
+    delta_time = func_800D8FF8();
+
+    self->baphysics->unk14 += self->baphysics->unk34 * delta_time;
+
+    if (self->baphysics->unk14 < self->baphysics->unk38)
+        self->baphysics->unk14 = self->baphysics->unk38;
+
+    self->baphysics->unk2C = self->baphysics->unk14 * delta_time;
+    self->baphysics->unk08 += self->baphysics->unk2C;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/core2/baphysics/func_8009B27C.s")
 
